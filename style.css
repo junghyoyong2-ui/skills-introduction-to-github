@@ -7,6 +7,11 @@
   --good: #15803d;
   --warn: #b45309;
   --bad: #b91c1c;
+  --wall: #94a3b8;
+  --path: #fde68a;
+  --start: #86efac;
+  --goal: #fca5a5;
+  --player: #60a5fa;
 }
 
 * {
@@ -52,10 +57,39 @@ p {
   font-size: 1.05rem;
 }
 
-.ops {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+.maze {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.cell {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  background: var(--wall);
+}
+
+.cell.path {
+  background: var(--path);
+}
+
+.cell.start {
+  background: var(--start);
+}
+
+.cell.goal {
+  background: var(--goal);
+}
+
+.cell.player {
+  background: var(--player);
+  border: 3px solid #1d4ed8;
+}
+
+.legend {
+  margin: 10px 0 0;
+  font-size: 0.95rem;
 }
 
 button {
@@ -72,26 +106,22 @@ button:hover {
   filter: brightness(0.97);
 }
 
-.op-btn.active,
 #start-btn,
 #submit-btn,
-#next-btn,
 #reset-btn {
   background: var(--primary);
   color: #fff;
 }
 
-.op-btn.active:hover,
 #start-btn:hover,
 #submit-btn:hover,
-#next-btn:hover,
 #reset-btn:hover {
   background: var(--primary-dark);
 }
 
 button:disabled {
   cursor: not-allowed;
-  opacity: 0.5;
+  opacity: 0.55;
 }
 
 .answer-row {
