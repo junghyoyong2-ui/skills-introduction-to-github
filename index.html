@@ -3,32 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>수학 모험 게임</title>
+    <title>미로 수학 탐험대</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <main class="game-wrap">
-      <h1>🌟 수학 모험 게임 🌟</h1>
-      <p class="subtitle">더하기, 빼기, 곱하기를 풀고 별을 모아보자!</p>
+      <h1>🧩 미로 수학 탐험대</h1>
+      <p class="subtitle">문제를 맞히면 한 칸 전진! 도착점까지 가보자 🚩</p>
 
       <section class="panel stats" aria-label="게임 점수판">
+        <div>위치: <strong id="step">1</strong>/<strong id="total-step">1</strong></div>
         <div>점수: <strong id="score">0</strong></div>
-        <div>연속 정답: <strong id="streak">0</strong></div>
         <div>남은 기회: <strong id="lives">3</strong></div>
       </section>
 
-      <section class="panel settings" aria-label="연산 선택">
-        <h2>문제 종류 고르기</h2>
-        <div class="ops">
-          <button class="op-btn active" data-op="add">➕ 더하기</button>
-          <button class="op-btn" data-op="sub">➖ 빼기</button>
-          <button class="op-btn" data-op="mul">✖️ 곱하기</button>
-          <button class="op-btn" data-op="mix">🎲 섞어서</button>
-        </div>
+      <section class="panel maze-panel" aria-label="미로 보드">
+        <div id="maze" class="maze" role="img" aria-label="미로 지도"></div>
+        <p class="legend">🟩 시작 | 🟦 나 | 🟨 길 | 🟥 도착</p>
       </section>
 
       <section class="panel problem" aria-live="polite">
-        <h2 id="question">시작 버튼을 눌러 게임을 시작해요!</h2>
+        <h2 id="question">게임 시작을 누르면 첫 문제가 나와요!</h2>
 
         <div class="answer-row">
           <label for="answer" class="sr-only">정답 입력</label>
@@ -38,11 +33,10 @@
 
         <div class="actions">
           <button id="start-btn">게임 시작</button>
-          <button id="next-btn" disabled>다음 문제</button>
           <button id="reset-btn">다시 하기</button>
         </div>
 
-        <p id="message" class="message">힘차게 시작해 볼까? 😊</p>
+        <p id="message" class="message">준비됐지? 시작해보자! 😊</p>
       </section>
     </main>
 
