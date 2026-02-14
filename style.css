@@ -1,0 +1,154 @@
+:root {
+  --bg: #f2fbff;
+  --panel: #ffffff;
+  --text: #1f2937;
+  --primary: #2563eb;
+  --primary-dark: #1e40af;
+  --good: #15803d;
+  --warn: #b45309;
+  --bad: #b91c1c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif;
+  background: radial-gradient(circle at top, #dbeafe, var(--bg));
+  color: var(--text);
+}
+
+.game-wrap {
+  max-width: 760px;
+  margin: 24px auto;
+  padding: 16px;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+}
+
+.panel {
+  background: var(--panel);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.1);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  text-align: center;
+  font-size: 1.05rem;
+}
+
+.ops {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+button {
+  border: none;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 1rem;
+  cursor: pointer;
+  background: #e5e7eb;
+  color: #111827;
+}
+
+button:hover {
+  filter: brightness(0.97);
+}
+
+.op-btn.active,
+#start-btn,
+#submit-btn,
+#next-btn,
+#reset-btn {
+  background: var(--primary);
+  color: #fff;
+}
+
+.op-btn.active:hover,
+#start-btn:hover,
+#submit-btn:hover,
+#next-btn:hover,
+#reset-btn:hover {
+  background: var(--primary-dark);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.answer-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+input[type="number"] {
+  flex: 1;
+  border: 2px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.message {
+  min-height: 28px;
+  font-weight: 700;
+}
+
+.message.good {
+  color: var(--good);
+}
+
+.message.warn {
+  color: var(--warn);
+}
+
+.message.bad {
+  color: var(--bad);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+@media (max-width: 560px) {
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .answer-row {
+    flex-direction: column;
+  }
+}
