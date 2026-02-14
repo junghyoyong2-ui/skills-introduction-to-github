@@ -1,16 +1,21 @@
-# Introduction to GitHub
+# 수학 모험 게임 (8살 어린이를 위한 교육용 게임)
 
-<img src="https://octodex.github.com/images/Professortocat_v2.png" align="right" height="200px" />
+브라우저에서 바로 실행할 수 있는 간단한 사칙연산 학습 게임입니다.
 
-Hey junghyoyong2-ui!
+## 기능
+- ➕ 더하기, ➖ 빼기, ✖️ 곱하기, 🎲 섞어서 모드
+- 정답/오답에 따른 점수, 연속 정답, 남은 기회 표시
+- 어린이를 위한 응원 메시지 제공
+- 모바일 화면에서도 사용할 수 있는 반응형 UI
 
-Mona here. I'm done preparing your exercise. Hope you enjoy! 💚
+## 실행 방법
+1. 이 저장소를 클론합니다.
+2. `index.html` 파일을 브라우저에서 엽니다.
 
-Remember, it's self-paced so feel free to take a break! ☕️
+간단히 실행하려면 아래 명령어를 사용할 수 있습니다.
 
-[![](https://img.shields.io/badge/Go%20to%20Exercise-%E2%86%92-1f883d?style=for-the-badge&logo=github&labelColor=197935)](https://github.com/junghyoyong2-ui/skills-introduction-to-github/issues/1)
+```bash
+python3 -m http.server 8000
+```
 
----
-
-&copy; 2025 GitHub &bull; [Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/code_of_conduct.md) &bull; [MIT License](https://gh.io/mit)
-
+그다음 브라우저에서 `http://localhost:8000`으로 접속하세요.
