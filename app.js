@@ -1,246 +1,271 @@
-const scoreEl = document.querySelector("#score");
-const livesEl = document.querySelector("#lives");
-const stepEl = document.querySelector("#step");
-const totalStepEl = document.querySelector("#total-step");
-const mazeEl = document.querySelector("#maze");
-const questionEl = document.querySelector("#question");
-const answerInput = document.querySelector("#answer");
+const templateListEl = document.querySelector("#template-list");
+const templateTitleEl = document.querySelector("#template-title");
+const templateDescriptionEl = document.querySelector("#template-description");
+const templateContentEl = document.querySelector("#template-content");
 const messageEl = document.querySelector("#message");
-const submitBtn = document.querySelector("#submit-btn");
-const startBtn = document.querySelector("#start-btn");
-const resetBtn = document.querySelector("#reset-btn");
+const copyBtn = document.querySelector("#copy-btn");
+const searchInput = document.querySelector("#search-input");
+const categorySelect = document.querySelector("#category-select");
 
-const cheers = ["정답! 한 칸 전진! 🚶", "멋져! 앞으로 가자! 🌟", "좋아! 길이 열렸어! 🎉"];
-const hints = ["괜찮아, 다시 생각해보자! 😊", "천천히 해도 좋아! 🤗", "한 번 더 도전! 💪"];
+const templates = [
+  {
+    id: "incident-summary",
+    title: "사건 개요 1페이지 정리",
+    category: "사건 관리",
+    description: "사실관계, 쟁점, 리스크를 1페이지로 빠르게 요약합니다.",
+    content: `다음 사실관계를 법무지원팀 내부 공유용으로 1페이지 요약해줘.
+형식: [사실관계][주요 쟁점][리스크][즉시 조치][추가 확인사항]
+톤: 객관적·중립적
+분량: 항목별 3~5줄
 
-const mazeRows = 7;
-const mazeCols = 7;
-const path = [
-  [0, 0],
-  [0, 1],
-  [1, 1],
-  [2, 1],
-  [2, 2],
-  [2, 3],
-  [3, 3],
-  [4, 3],
-  [4, 4],
-  [4, 5],
-  [5, 5],
-  [6, 5],
-  [6, 6],
+사실관계:
+- (여기에 입력)`
+  },
+  {
+    id: "issue-extraction",
+    title: "쟁점 도출 + 누락 질문",
+    category: "사건 관리",
+    description: "핵심 쟁점과 추가 확인 질문을 표로 정리합니다.",
+    content: `아래 사건에서 법적/절차적 쟁점을 최대한 빠짐없이 뽑아줘.
+그리고 각 쟁점별로 '추가로 확인해야 할 질문'을 3개씩 제시해줘.
+형식: 표(쟁점 | 왜 중요한지 | 추가 질문)
+
+사건:
+- (입력)`
+  },
+  {
+    id: "dept-reply",
+    title: "부서 회신 메일 초안",
+    category: "커뮤니케이션",
+    description: "진료과·유관부서에 보낼 공식 회신 요청 메일을 작성합니다.",
+    content: `다음 사안에 대해 진료과(또는 관련 부서)에 보낼 확인 요청 메일 초안을 작성해줘.
+조건:
+- 공손하지만 책임소재가 모호하지 않게
+- 회신 기한 포함
+- 필요한 첨부/증빙 목록 포함
+- 문장 길이는 짧고 명확하게
+
+배경:
+- (입력)`
+  },
+  {
+    id: "official-letter",
+    title: "공문/내용증명 초안 구조",
+    category: "대외 문서",
+    description: "대외 발송 문서의 기본 구조를 격식 있게 구성합니다.",
+    content: `다음 사실관계를 바탕으로 대외 발송용 공문(또는 내용증명) 초안 구조를 만들어줘.
+형식:
+1. 제목
+2. 발송 취지
+3. 사실관계 요약
+4. 병원 입장
+5. 요청사항/기한
+6. 향후 조치 안내
+문체: 법무 문서에 맞는 격식체
+주의: 단정적 표현 과다 사용 금지, 사실과 의견 구분`
+  },
+  {
+    id: "meeting-checklist",
+    title: "회의 준비 체크리스트",
+    category: "회의/보고",
+    description: "법무·진료·원무 공동 회의 준비용 체크리스트를 만듭니다.",
+    content: `이 안건으로 원내 회의(법무+진료+원무) 준비 체크리스트를 만들어줘.
+카테고리:
+- 필수 자료
+- 참석자별 확인 포인트
+- 회의에서 결정할 항목
+- 회의 후 후속 액션(담당/기한)
+형식: 체크박스 리스트`
+  },
+  {
+    id: "five-line-report",
+    title: "경영진 보고 5줄",
+    category: "회의/보고",
+    description: "의사결정에 필요한 핵심만 5줄로 요약합니다.",
+    content: `아래 사안을 병원장/경영진 보고용으로 5줄 요약해줘.
+구성:
+1) 현재 상황
+2) 핵심 리스크
+3) 선택 가능한 대응안 2개
+4) 각 대응안 장단점 한 줄
+5) 권고안 한 줄
+톤: 간결·판단지원형`
+  },
+  {
+    id: "research-outline",
+    title: "법령/판례 리서치 아웃라인",
+    category: "리서치",
+    description: "내부 검토 메모 작성을 위한 조사 틀을 제공합니다.",
+    content: `다음 쟁점에 대해 리서치 아웃라인을 짜줘.
+형식:
+- 확인할 법령/고시/지침
+- 키워드(검색어) 10개
+- 유사 판례 확인 포인트
+- 사실관계 매칭 체크리스트
+목적: 내부 검토 메모 작성
+쟁점:
+- (입력)`
+  },
+  {
+    id: "contract-review",
+    title: "계약서 검토 포인트",
+    category: "계약",
+    description: "조항별 리스크와 수정 제안을 빠르게 확인합니다.",
+    content: `아래 계약 조항을 법무지원팀 1차 검토용으로 분석해줘.
+형식: [조항 요지][리스크][수정 제안 문구][협상 우선순위]
+특히 확인:
+- 손해배상/면책
+- 해지 조항
+- 준거법/관할
+- 개인정보·보안
+조항:
+- (입력)`
+  },
+  {
+    id: "dispute-scenario",
+    title: "민원/분쟁 대응 시나리오",
+    category: "사건 관리",
+    description: "초기~종결 단계별 대응 전략을 설계합니다.",
+    content: `다음 민원(또는 분쟁) 상황에 대한 대응 시나리오를 3단계로 설계해줘.
+단계: 초기 대응(24시간) / 중기 대응(1주) / 종결 대응
+각 단계별:
+- 커뮤니케이션 문구
+- 내부 의사결정 포인트
+- 증빙 확보 항목`
+  },
+  {
+    id: "rewrite-legal-tone",
+    title: "문장 리라이팅 (법무 톤)",
+    category: "커뮤니케이션",
+    description: "감정 표현을 줄이고 공식 문서 문체로 다듬습니다.",
+    content: `아래 문장을 법무지원팀 공식 문서 톤으로 다듬어줘.
+요구사항:
+- 감정적 표현 제거
+- 사실/평가 분리
+- 오해 소지 표현 축소
+- 문장 20% 간결화
+원문:
+- (입력)`
+  }
 ];
 
-let score = 0;
-let lives = 3;
-let gameStarted = false;
-let playerIndex = 0;
-let answer = null;
+let selectedTemplateId = null;
 
-function randomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function playTone(frequency, duration = 0.12, type = "sine", when = 0) {
-  const audioCtx = window.audioCtx || new AudioContext();
-  window.audioCtx = audioCtx;
-
-  const oscillator = audioCtx.createOscillator();
-  const gainNode = audioCtx.createGain();
-
-  oscillator.type = type;
-  oscillator.frequency.value = frequency;
-  gainNode.gain.value = 0.0001;
-
-  oscillator.connect(gainNode);
-  gainNode.connect(audioCtx.destination);
-
-  const now = audioCtx.currentTime + when;
-  gainNode.gain.exponentialRampToValueAtTime(0.2, now + 0.01);
-  gainNode.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-
-  oscillator.start(now);
-  oscillator.stop(now + duration + 0.02);
-}
-
-function playCorrectSound() {
-  playTone(523, 0.13, "triangle", 0);
-  playTone(659, 0.13, "triangle", 0.11);
-  playTone(784, 0.15, "triangle", 0.22);
-}
-
-function playWrongSound() {
-  playTone(260, 0.16, "sawtooth", 0);
-  playTone(190, 0.2, "sawtooth", 0.14);
-}
-
-function generateQuestion() {
-  const op = ["add", "sub", "mul"][randomInt(0, 2)];
-
-  let a = 1;
-  let b = 1;
-
-  if (op === "add") {
-    a = randomInt(0, 9);
-    b = randomInt(0, 9 - a);
-    answer = a + b;
-    questionEl.textContent = `${a} + ${b} = ?`;
-    return;
-  }
-
-  if (op === "sub") {
-    a = randomInt(1, 9);
-    b = randomInt(0, a);
-    answer = a - b;
-    questionEl.textContent = `${a} - ${b} = ?`;
-    return;
-  }
-
-  a = randomInt(2, 9);
-  b = randomInt(1, 9);
-  answer = a * b;
-  questionEl.textContent = `${a} × ${b} = ?`;
-}
-
-function drawMaze() {
-  mazeEl.innerHTML = "";
-  const pathSet = new Set(path.map(([r, c]) => `${r},${c}`));
-  const [playerR, playerC] = path[playerIndex];
-  const [startR, startC] = path[0];
-  const [goalR, goalC] = path[path.length - 1];
-
-  for (let r = 0; r < mazeRows; r += 1) {
-    for (let c = 0; c < mazeCols; c += 1) {
-      const cell = document.createElement("div");
-      cell.classList.add("cell");
-
-      const key = `${r},${c}`;
-      if (pathSet.has(key)) {
-        cell.classList.add("path");
-      }
-
-      if (r === startR && c === startC) {
-        cell.classList.add("start");
-      }
-
-      if (r === goalR && c === goalC) {
-        cell.classList.add("goal");
-      }
-
-      if (r === playerR && c === playerC) {
-        cell.classList.add("player");
-      }
-
-      mazeEl.appendChild(cell);
-    }
-  }
-}
-
-function updateBoard() {
-  scoreEl.textContent = score;
-  livesEl.textContent = lives;
-  stepEl.textContent = playerIndex + 1;
-  totalStepEl.textContent = path.length;
-}
-
-function setMessage(text, type) {
+function setMessage(text, type = "info") {
   messageEl.textContent = text;
-  messageEl.classList.remove("good", "warn", "bad");
-  if (type) {
-    messageEl.classList.add(type);
+  messageEl.classList.remove("info", "good", "warn");
+  messageEl.classList.add(type);
+}
+
+function populateCategoryOptions() {
+  const categories = [...new Set(templates.map((template) => template.category))];
+
+  categories.forEach((category) => {
+    const option = document.createElement("option");
+    option.value = category;
+    option.textContent = category;
+    categorySelect.appendChild(option);
+  });
+}
+
+function getFilteredTemplates() {
+  const query = searchInput.value.trim().toLowerCase();
+  const selectedCategory = categorySelect.value;
+
+  return templates.filter((template) => {
+    const matchCategory = selectedCategory === "all" || template.category === selectedCategory;
+    const fullText = `${template.title} ${template.description} ${template.content}`.toLowerCase();
+    const matchQuery = query === "" || fullText.includes(query);
+    return matchCategory && matchQuery;
+  });
+}
+
+function renderTemplateList() {
+  const filteredTemplates = getFilteredTemplates();
+  templateListEl.innerHTML = "";
+
+  if (filteredTemplates.length === 0) {
+    const emptyItem = document.createElement("li");
+    emptyItem.className = "empty-item";
+    emptyItem.textContent = "검색 결과가 없습니다.";
+    templateListEl.appendChild(emptyItem);
+    return;
+  }
+
+  filteredTemplates.forEach((template) => {
+    const li = document.createElement("li");
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "template-btn";
+    button.dataset.templateId = template.id;
+    button.setAttribute("aria-pressed", String(template.id === selectedTemplateId));
+
+    if (template.id === selectedTemplateId) {
+      button.classList.add("active");
+    }
+
+    button.innerHTML = `
+      <span class="template-title">${template.title}</span>
+      <span class="template-meta">${template.category}</span>
+    `;
+
+    button.addEventListener("click", () => {
+      selectedTemplateId = template.id;
+      showTemplate(template.id);
+      renderTemplateList();
+    });
+
+    li.appendChild(button);
+    templateListEl.appendChild(li);
+  });
+}
+
+function showTemplate(templateId) {
+  const template = templates.find((item) => item.id === templateId);
+
+  if (!template) {
+    templateTitleEl.textContent = "템플릿을 선택하세요";
+    templateDescriptionEl.textContent = "왼쪽 목록에서 원하는 템플릿을 누르면 내용을 확인할 수 있습니다.";
+    templateContentEl.textContent = "선택된 템플릿이 없습니다.";
+    copyBtn.disabled = true;
+    return;
+  }
+
+  templateTitleEl.textContent = template.title;
+  templateDescriptionEl.textContent = template.description;
+  templateContentEl.textContent = template.content;
+  copyBtn.disabled = false;
+}
+
+async function copySelectedTemplate() {
+  const template = templates.find((item) => item.id === selectedTemplateId);
+
+  if (!template) {
+    setMessage("먼저 템플릿을 선택해주세요.", "warn");
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(template.content);
+    setMessage(`✅ '${template.title}' 템플릿을 복사했어요.`, "good");
+  } catch (error) {
+    setMessage("복사에 실패했어요. 텍스트를 직접 드래그해 복사해주세요.", "warn");
   }
 }
 
-function finishGame() {
-  gameStarted = false;
-  submitBtn.disabled = true;
-  const reachedGoal = playerIndex === path.length - 1;
-
-  if (reachedGoal) {
-    setMessage(`도착 성공! 점수 ${score}점! 정말 잘했어! 🏁`, "good");
-    questionEl.textContent = "미로 탈출 성공! 다시 하기로 또 해보자!";
-  } else {
-    setMessage(`기회가 다 됐어. 점수 ${score}점! 다시 도전해보자!`, "bad");
-    questionEl.textContent = "아쉬워! 다시 하기를 누르면 새로 시작해요.";
-  }
-}
-
-function resetGame() {
-  score = 0;
-  lives = 3;
-  playerIndex = 0;
-  answer = null;
-  gameStarted = false;
-
-  updateBoard();
-  drawMaze();
-  questionEl.textContent = "게임 시작을 누르면 첫 문제가 나와요!";
-  answerInput.value = "";
-  submitBtn.disabled = false;
-  setMessage("준비 완료! 시작 버튼을 눌러보자! 😄", "warn");
-}
-
-startBtn.addEventListener("click", async () => {
-  if (gameStarted) {
-    setMessage("이미 게임 중이야! 문제를 풀어보자!", "warn");
-    return;
-  }
-
-  gameStarted = true;
-  if (window.audioCtx && window.audioCtx.state === "suspended") {
-    await window.audioCtx.resume();
-  }
-
-  generateQuestion();
-  answerInput.focus();
-  setMessage("좋아! 정답을 맞히면 앞으로 갈 수 있어!", "warn");
+searchInput.addEventListener("input", () => {
+  renderTemplateList();
 });
 
-submitBtn.addEventListener("click", () => {
-  if (!gameStarted) {
-    setMessage("먼저 게임 시작 버튼을 눌러줘!", "warn");
-    return;
-  }
-
-  const userAnswer = Number(answerInput.value);
-  if (answerInput.value.trim() === "" || Number.isNaN(userAnswer)) {
-    setMessage("숫자를 입력해줘!", "warn");
-    return;
-  }
-
-  if (userAnswer === answer) {
-    score += 10;
-    playerIndex += 1;
-    playCorrectSound();
-    setMessage(cheers[randomInt(0, cheers.length - 1)], "good");
-  } else {
-    lives -= 1;
-    playWrongSound();
-    setMessage(`틀렸어! 정답은 ${answer}. ${hints[randomInt(0, hints.length - 1)]}`, "bad");
-  }
-
-  answerInput.value = "";
-  drawMaze();
-  updateBoard();
-
-  if (playerIndex >= path.length - 1) {
-    playerIndex = path.length - 1;
-    drawMaze();
-    finishGame();
-    return;
-  }
-
-  if (lives <= 0) {
-    finishGame();
-    return;
-  }
-
-  generateQuestion();
-  answerInput.focus();
+categorySelect.addEventListener("change", () => {
+  renderTemplateList();
 });
 
-resetBtn.addEventListener("click", () => {
-  resetGame();
+copyBtn.addEventListener("click", () => {
+  copySelectedTemplate();
 });
 
-resetGame();
+populateCategoryOptions();
+renderTemplateList();
+setMessage("템플릿을 고른 뒤 복사 버튼을 눌러 사용하세요.");
